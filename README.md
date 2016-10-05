@@ -1,6 +1,6 @@
 ## Implemented in scala
 here are output from the application:
-`sampled merged iterator after 1000000 in 610 millis:
+```sampled merged iterator after 1000000 in 610 millis:
  1000005
  1617492
  666671
@@ -58,7 +58,7 @@ here are output from the application:
  (23,Success(0.003446775528223261))
  
  Process finished with exit code 0
-`
+```
 This simple project requires sbt, JDK 8 and scala 2.10.
 
 There are two alternative and mostly identical tasks, one of which is in Java and other in Scala.
