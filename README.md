@@ -59,6 +59,7 @@ here are output from the application:
  
  Process finished with exit code 0
 ```
+
 This simple project requires sbt, JDK 8 and scala 2.10.
 
 There are two alternative and mostly identical tasks, one of which is in Java and other in Scala.
