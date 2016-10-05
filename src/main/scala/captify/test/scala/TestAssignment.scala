@@ -4,6 +4,7 @@ import scala.util.Try
 import SparseIterators._
 
 import scala.collection.mutable
+import scala.collection.parallel.immutable.ParRange
 
 /**
   * Here are the functions to fill in.
@@ -98,6 +99,10 @@ object TestAssignment {
     * @param extent      this affects precision and time spent
     * @return Seq of (Sparsity, Try[Approximation]) pairs
     */
-  def approximatesFor(sparsityMin: Int, sparsityMax: Int, extent: Int): Seq[(Int, Try[Double])] = ???
+  def approximatesFor(sparsityMin: Int, sparsityMax: Int, extent: Int): Seq[(Int, Try[Double])] = {
+    (sparsityMin until sparsityMax).par.map(i => (i, Try {
+      approximateSparsity(i, extent)
+    })).seq
+  }
 
 }
