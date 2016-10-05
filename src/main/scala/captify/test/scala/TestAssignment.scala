@@ -35,7 +35,9 @@ object TestAssignment {
     * @param position zero-based
     * @return value at given position
     */
-  def valueAt(iterator: Iterator[BigInt], position: Int): BigInt = ???
+  def valueAt(iterator: Iterator[BigInt], position: Int): BigInt = {
+    sampleAfter(iterator, position, 1).next()
+  }
 
   /**
     * Produce an iterator which generates values from given subset of input iterators.
