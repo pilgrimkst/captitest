@@ -4,7 +4,6 @@ import scala.util.Try
 import SparseIterators._
 
 import scala.collection.mutable
-import scala.collection.parallel.immutable.ParRange
 
 /**
   * Here are the functions to fill in.
@@ -54,7 +53,7 @@ object TestAssignment {
     * @return Iterator with all elements and ascending sorting retained
     */
   def mergeIterators(iterators: Seq[Iterator[BigInt]]): Iterator[BigInt] = {
-
+  // For K iterators, each K-th pull from iterator would cost K * log K operations, and Log K on the rest of cases
     def fill(b: mutable.PriorityQueue[BigInt], its: Seq[Iterator[BigInt]]) = its
       .filter(it => it.hasNext)
       .foldLeft(b)((acc, it) => acc += it.next())
