@@ -1,5 +1,6 @@
 ## Implemented in scala
 here are output from the application:
+
 ```sampled merged iterator after 1000000 in 610 millis:
  1000005
  1617492
