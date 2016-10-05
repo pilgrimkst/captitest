@@ -1,8 +1,9 @@
 package captify.test.scala
 
 import scala.util.Try
-
 import SparseIterators._
+
+import scala.collection.mutable
 
 /**
   * Here are the functions to fill in.
@@ -51,7 +52,25 @@ object TestAssignment {
     * @param iterators to be merged
     * @return Iterator with all elements and ascending sorting retained
     */
-  def mergeIterators(iterators: Seq[Iterator[BigInt]]): Iterator[BigInt] = ???
+  def mergeIterators(iterators: Seq[Iterator[BigInt]]): Iterator[BigInt] = {
+
+    def fill(b: mutable.PriorityQueue[BigInt], its: Seq[Iterator[BigInt]]) = its
+      .filter(it => it.hasNext)
+      .foldLeft(b)((acc, it) => acc += it.next())
+
+    new Iterator[BigInt] {
+      private val buf = new mutable.PriorityQueue[BigInt]().reverse
+
+      override def hasNext: Boolean = buf.nonEmpty || iterators.exists(it => it.hasNext)
+
+      override def next(): BigInt = {
+        if (buf.isEmpty) {
+          fill(buf, iterators)
+        }
+        buf.dequeue()
+      }
+    }
+  }
 
   /**
     * How much elements, on average, are included in sparse stream from the general sequence

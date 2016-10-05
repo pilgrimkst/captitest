@@ -2,7 +2,7 @@ package captify.test.scala
 
 import java.util.NoSuchElementException
 
-import captify.test.scala.TestAssignment.{sampleAfter, valueAt}
+import captify.test.scala.TestAssignment.{sampleAfter, valueAt, mergeIterators}
 import org.scalatest.{FunSuite, Matchers}
 
 class TestAssignment$Test extends FunSuite with Matchers {
@@ -39,11 +39,17 @@ class TestAssignment$Test extends FunSuite with Matchers {
     }
   }
 
-
   test("sampleAfter: iterators can't be reused") {
-
     val it = Seq[BigInt](1, 2, 3, 4, 5).iterator
     sampleAfter(it, 1, 2).toList should be(List(2, 3, 4))
     sampleAfter(it, 0, 2).toList should not be List(1, 2, 3)
+  }
+
+  test("mergeIterators should merge iterators in  ascending order") {
+    val i1 = Seq[BigInt](3, 4, 10).iterator
+    val i2 = Seq[BigInt](2, 8, 12).iterator
+    val i3 = Seq[BigInt](1, 6, 9).iterator
+
+    val res = mergeIterators(Seq(i1, i2, i3)).toList should be(Seq(1,2,3,4,6,8,9,10,12))
   }
 }
