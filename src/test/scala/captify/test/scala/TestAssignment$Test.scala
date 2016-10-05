@@ -1,5 +1,7 @@
 package captify.test.scala
 
+import java.util.NoSuchElementException
+
 import captify.test.scala.TestAssignment.{sampleAfter, valueAt}
 import org.scalatest.{FunSuite, Matchers}
 
@@ -29,6 +31,14 @@ class TestAssignment$Test extends FunSuite with Matchers {
     valueAt(it, 1) should be(2)
     valueAt(it, 0) should not be 1
   }
+
+  test("valueAt: exception for value out of bounds") {
+    val it = Seq[BigInt](1, 2).iterator
+    assertThrows[NoSuchElementException] {
+      valueAt(it, 3)
+    }
+  }
+
 
   test("sampleAfter: iterators can't be reused") {
 
