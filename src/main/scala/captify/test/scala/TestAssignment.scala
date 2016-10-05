@@ -20,7 +20,9 @@ object TestAssignment {
     * @return sampleAfter(iteratorFromOne, 1, 2) should be same as to Seq[BigInt](2,3,4).toIterator
     */
   def sampleAfter(iterator: Iterator[BigInt], after: Int, sampleSize: Int): Iterator[BigInt] = {
+    val it = iterator.drop(after)
 
+    it.take(sampleSize + 1)
   }
 
   /**
