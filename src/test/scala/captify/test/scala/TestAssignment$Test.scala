@@ -50,6 +50,13 @@ class TestAssignment$Test extends FunSuite with Matchers {
     val i2 = Seq[BigInt](2, 8, 12).iterator
     val i3 = Seq[BigInt](1, 6, 9).iterator
 
-    val res = mergeIterators(Seq(i1, i2, i3)).toList should be(Seq(1,2,3,4,6,8,9,10,12))
+    mergeIterators(Seq(i1, i2, i3)).toList should be(Seq(1, 2, 3, 4, 6, 8, 9, 10, 12))
+
+    val iterators = Seq(
+      Seq[BigInt](1, 2, 3).toIterator,
+      Seq[BigInt]().toIterator,
+      Seq[BigInt](0, 10, 20).toIterator)
+
+    mergeIterators(iterators).toList should be(Seq(0, 1, 2, 3, 10, 20))
   }
 }

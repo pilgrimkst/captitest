@@ -53,21 +53,49 @@ object TestAssignment {
     * @return Iterator with all elements and ascending sorting retained
     */
   def mergeIterators(iterators: Seq[Iterator[BigInt]]): Iterator[BigInt] = {
-  // For K iterators, each K-th pull from iterator would cost K * log K operations, and Log K on the rest of cases
-    def fill(b: mutable.PriorityQueue[BigInt], its: Seq[Iterator[BigInt]]) = its
-      .filter(it => it.hasNext)
-      .foldLeft(b)((acc, it) => acc += it.next())
+    val buf = Array.fill[BigInt](iterators.length)(Long.MaxValue)
 
+    for (i <- iterators.indices) {
+      val it = iterators(i)
+      if (it.hasNext) {
+        buf(i) = it.next()
+      }
+    }
+    /** For set of K iterators
+      * Space complexity O(K)
+      * hasNext() & next()  time complexity O(K)
+      *
+      */
     new Iterator[BigInt] {
-      private val buf = new mutable.PriorityQueue[BigInt]().reverse
+      def findMin(buf: Array[BigInt]): (Int, BigInt) = {
+        var min: BigInt = Long.MaxValue
+        var minIndex = -1
+        for (i <- buf.indices) {
+          val x = buf(i)
+          if (x < min) {
+            min = x
+            minIndex = i
+          }
+        }
 
-      override def hasNext: Boolean = buf.nonEmpty || iterators.exists(it => it.hasNext)
+        (minIndex, min)
+      }
+
+      override def hasNext: Boolean = findMin(buf)._2 != Long.MaxValue
 
       override def next(): BigInt = {
-        if (buf.isEmpty) {
-          fill(buf, iterators)
+        val (i, min) = findMin(buf)
+        if (i < 0) {
+          throw new NoSuchElementException()
+        } else {
+          val s = iterators(i)
+          if (s.hasNext) {
+            buf(i) = s.next()
+          } else {
+            buf(i) = Long.MaxValue
+          }
+          min
         }
-        buf.dequeue()
       }
     }
   }
