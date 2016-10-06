@@ -67,34 +67,34 @@ object TestAssignment {
       *
       */
     new Iterator[BigInt] {
-      def findMin(buf: Array[BigInt]): (Int, BigInt) = {
-        var min: BigInt = Long.MaxValue
-        var minIndex = -1
-        for (i <- buf.indices) {
-          val x = buf(i)
-          if (x < min) {
-            min = x
-            minIndex = i
-          }
-        }
-
-        (minIndex, min)
+      def findMin(buf: Array[BigInt]): Option[ValueWithIndex[BigInt]] = {
+        buf
+          .indices
+          .filter(i => buf(i) != Long.MaxValue)
+          .foldLeft(Option.empty[ValueWithIndex[BigInt]])((min: Option[ValueWithIndex[BigInt]], currentIndex: Int) => min match {
+            case None => Some(ValueWithIndex(currentIndex, buf(currentIndex)))
+            case Some(x) =>
+              if (x.value > buf(currentIndex)) {
+                Some(ValueWithIndex(currentIndex, buf(currentIndex)))
+              } else {
+                Some(x)
+              }
+          })
       }
 
-      override def hasNext: Boolean = findMin(buf)._2 != Long.MaxValue
+      override def hasNext: Boolean = findMin(buf).isDefined
 
       override def next(): BigInt = {
-        val (i, min) = findMin(buf)
-        if (i < 0) {
-          throw new NoSuchElementException()
-        } else {
-          val s = iterators(i)
-          if (s.hasNext) {
-            buf(i) = s.next()
-          } else {
-            buf(i) = Long.MaxValue
-          }
-          min
+        findMin(buf) match {
+          case None => throw new NoSuchElementException()
+          case Some(ValueWithIndex(i, min)) =>
+            val s = iterators(i)
+            if (s.hasNext) {
+              buf(i) = s.next()
+            } else {
+              buf(i) = Long.MaxValue
+            }
+            min
         }
       }
     }
@@ -131,5 +131,7 @@ object TestAssignment {
       approximateSparsity(i, extent)
     })).seq
   }
+
+  case class ValueWithIndex[T](index: Int, value: T)
 
 }
