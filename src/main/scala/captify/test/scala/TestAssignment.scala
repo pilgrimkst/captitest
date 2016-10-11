@@ -1,9 +1,8 @@
 package captify.test.scala
 
-import scala.util.Try
-import SparseIterators._
+import captify.test.scala.SparseIterators._
 
-import scala.collection.mutable
+import scala.util.Try
 
 /**
   * Here are the functions to fill in.
@@ -53,12 +52,12 @@ object TestAssignment {
     * @return Iterator with all elements and ascending sorting retained
     */
   def mergeIterators(iterators: Seq[Iterator[BigInt]]): Iterator[BigInt] = {
-    val buf = Array.fill[BigInt](iterators.length)(Long.MaxValue)
+    val buf = Array.fill[Option[BigInt]](iterators.length)(Option.empty[BigInt])
 
     for (i <- iterators.indices) {
       val it = iterators(i)
       if (it.hasNext) {
-        buf(i) = it.next()
+        buf(i) = Some(it.next())
       }
     }
     /** For set of K iterators
@@ -67,15 +66,15 @@ object TestAssignment {
       *
       */
     new Iterator[BigInt] {
-      def findMin(buf: Array[BigInt]): Option[ValueWithIndex[BigInt]] = {
+      def findMin(buf: Array[Option[BigInt]]): Option[ValueWithIndex[BigInt]] = {
         buf
           .indices
-          .filter(i => buf(i) != Long.MaxValue)
+          .filter(i => buf(i).isDefined)
           .foldLeft(Option.empty[ValueWithIndex[BigInt]])((min: Option[ValueWithIndex[BigInt]], currentIndex: Int) => min match {
-            case None => Some(ValueWithIndex(currentIndex, buf(currentIndex)))
+            case None => Some(ValueWithIndex(currentIndex, buf(currentIndex).get))
             case Some(x) =>
-              if (x.value > buf(currentIndex)) {
-                Some(ValueWithIndex(currentIndex, buf(currentIndex)))
+              if (x.value > buf(currentIndex).get) {
+                Some(ValueWithIndex(currentIndex, buf(currentIndex).get))
               } else {
                 Some(x)
               }
@@ -90,9 +89,9 @@ object TestAssignment {
           case Some(ValueWithIndex(i, min)) =>
             val s = iterators(i)
             if (s.hasNext) {
-              buf(i) = s.next()
+              buf(i) = Some(s.next())
             } else {
-              buf(i) = Long.MaxValue
+              buf(i) = Option.empty
             }
             min
         }

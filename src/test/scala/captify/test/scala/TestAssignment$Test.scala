@@ -52,11 +52,16 @@ class TestAssignment$Test extends FunSuite with Matchers {
 
     mergeIterators(Seq(i1, i2, i3)).toList should be(Seq(1, 2, 3, 4, 6, 8, 9, 10, 12))
 
-    val iterators = Seq(
+    var iterators = Seq(
       Seq[BigInt](1, 2, 3).toIterator,
       Seq[BigInt]().toIterator,
       Seq[BigInt](0, 10, 20).toIterator)
 
     mergeIterators(iterators).toList should be(Seq(0, 1, 2, 3, 10, 20))
+
+    iterators = Seq(Seq[BigInt](1, 2, 3).toIterator, Seq[BigInt](Long.MaxValue).toIterator, Seq[BigInt](0, 10, 20).toIterator)
+
+
+    mergeIterators(iterators).toList should be(Seq(0, 1, 2, 3, 10, 20, Long.MaxValue))
   }
 }
